@@ -1,6 +1,7 @@
 program main
+  use variable
+  use fonction
   implicit none
-
 
 
   real*8, dimension(3,100)::U,Unext
@@ -10,6 +11,7 @@ program main
   real*8::rhog,rhod,pg,pd,vg,vd
   real*8::mVg,mVd,Eg,Ed
 
+  print*,get_Kb(1.d0)
   !! INITIALISATION
   Nx=100
   Nt=10
@@ -45,7 +47,7 @@ program main
 
 
   do i=0,Nx+1
-     print*, i*dx, U(2,i), U(1,i), U(3,i)
+     !print*, i*dx, U(2,i), U(1,i), U(3,i)
   end do
 
   !!Boucle en temps et en espace
@@ -78,4 +80,3 @@ contains
 
 
 end program main
-
