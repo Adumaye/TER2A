@@ -27,8 +27,8 @@ program main
 
   mVg=rhog*(Vg)
   mVd=rhod*(Vd)
-  Eg=1/2*rhog*vg**2   !!! /!\ I CI
-  Ed=1/2*rhod*vd**2   !!! /!\ I CI
+  Eg=1/2*vg**2 + pg*1./(get_gamma()-1.)
+  Ed=1/2*vd**2 +pd*1./(get_gamma()-1.)
 
   do i=0,Nx+1
     if (i<Nx/2) then

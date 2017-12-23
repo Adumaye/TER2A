@@ -9,7 +9,7 @@ function get_F(U)
   real*8,dimension(3)::get_F
   get_F(1)=U(2)
   get_F(2)=U(2)*U(2)/(U(1)) + get_P(U)
-  get_F(3)=(U(3)+get_P(U)*U(2))/U(1)
+  get_F(3)=1./(Gamma-1.)*get_P(U)/U(1)+(U(2)/U(1))**2/2.
 end function
 
 

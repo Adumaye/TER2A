@@ -12,13 +12,13 @@ contains
 function get_T(U)
   real*8,dimension(3),intent(in)::U
   real*8::get_T
-  get_T=U(3)/(N*Kb*1.5)
+  get_T=get_P(U)/(N*Kb)
 end function
 
 function get_P(U)
   real*8,dimension(3),intent(in)::U
   real*8::get_P
-  get_P=U(3)/(1.5*dx) !on prend dy et dz egaux a 1.
+  get_P=(U(3)-(U(2)/U(1))**2/2)*U(1)*(Gamma-1.)
 end function
 
 function get_c(U)
@@ -31,4 +31,9 @@ function get_dx()
   real*8::get_dx
   get_dx=dx
 end function
+
+function get_gamma()
+  real*8::get_gamma
+  get_gamma=Gamma
+end function 
 end module
