@@ -7,9 +7,9 @@ contains
 function get_F(U)
   real*8,dimension(3),intent(in)::U
   real*8,dimension(3)::get_F
-  get_F(0)=U(2)
-  get_F(1)=U(2)*U(2)/(U(1)) + get_P(U(3))
-  get_F(2)=(U(3)+get_P(U(3)))*U(2)/U(1)
+  get_F(1)=U(2)
+  get_F(2)=U(2)*U(2)/(U(1)) + get_P(U)
+  get_F(3)=(U(3)+get_P(U)*U(2))/U(1)
 end function
 
 
@@ -59,7 +59,23 @@ function get_dt(U)
       max=b
     end if
   end do
-  get_dt=0.99d0 *get_dx()/(2.d0*max)
+  get_dt=0.9d0 *get_dx()/(2.d0*max)
 end function
+
+
+subroutine write(x,U,i)
+  real*8,intent(in)::x
+  real*8,dimension(3)::U
+  character*10 :: name
+  write(name,'(a7,I3.3)') "Data/t_",i
+  print*,name
+  if (n==0) then
+    open(1,file=name,form="formatted")
+  else
+    open(1,file=name, form="formatted",position="append")
+  end if
+  write(1,*)x,U(2)/U(1),get_P(U),get_T(U)
+  close(1)
+end subroutine write
 
 end module
