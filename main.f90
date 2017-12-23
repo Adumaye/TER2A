@@ -30,7 +30,7 @@ program main
   Eg=1/2*vg**2 + pg*1./(get_gamma()-1.)
   Ed=1/2*vd**2 +pd*1./(get_gamma()-1.)
 
-  do i=0,Nx+1
+  do i=0,Nx+1,1
     if (i<Nx/2) then
       U(1,i)=rhog
       U(2,i)=mVg
@@ -43,16 +43,13 @@ program main
     end if
   end do
 
-
   !!! BOUCLE EN TEMPS
   t=0.
   Nt=0
   do while (t<tf)
     Unext=0.
     !!! PARCOURE DES INTERFACES
-    print*,"test"
     do i=0,Nx
-      print*,"testeur"
       FLux_i=Flux(U(:,i),U(:,i+1))
       Unext(:,i)=Unext(:,i)-Flux_i
       Unext(:,i+1)=Unext(:,i+1)+Flux_i
@@ -62,6 +59,7 @@ program main
     U(:,1:Nx)=U(:,1:Nx)+dt/dx*Unext(:,1:Nx)
     do i=0,Nx+1
       call write(i*h,U(:,i),i)
+      print*,i*h
     end do
     t=t+dt
     Nt=Nt+1

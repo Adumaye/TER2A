@@ -68,8 +68,7 @@ subroutine write(x,U,i)
   real*8,dimension(3)::U
   character*10 :: name
   write(name,'(a7,I3.3)') "Data/t_",i
-  print*,name
-  if (n==0) then
+  if (x==0) then
     open(1,file=name,form="formatted")
   else
     open(1,file=name, form="formatted",position="append")

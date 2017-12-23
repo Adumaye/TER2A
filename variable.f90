@@ -2,9 +2,9 @@ module variable  !!! Ce module sert a récupérer toute les données néccéssai
 
   !PARAMETRE FIXE DU PROBLEME
   real*8,parameter:: Kb=1.38!*10**(-23)
-  real*8,parameter:: N=400
+  real*8,parameter:: N=400.d0
   real*8,parameter:: Gamma=1.4
-  real*8,parameter:: dx=10**(-2)
+  real*8,parameter:: dx=10.d0**(-2)
 
 
 contains
@@ -35,5 +35,5 @@ end function
 function get_gamma()
   real*8::get_gamma
   get_gamma=Gamma
-end function 
+end function
 end module
