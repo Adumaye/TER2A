@@ -47,6 +47,9 @@ program main
   t=0.
   Nt=0
   do while (t<tf)
+    if (t==0) then
+      call system ('mkdir Data/')
+    end if
     Unext=0.
     !!! PARCOURE DES INTERFACES
     do i=0,Nx
@@ -58,8 +61,7 @@ program main
     dt=get_dt(U)
     U(:,1:Nx)=U(:,1:Nx)+dt/dx*Unext(:,1:Nx)
     do i=0,Nx+1
-      call write(i*h,U(:,i),i)
-      print*,i*h
+      call write(i*h,U(:,i),Nt)
     end do
     t=t+dt
     Nt=Nt+1

@@ -11,4 +11,4 @@ exe: $(OBJ)
 
 #Cleaner
 clean:
-	rm -r *~ *.o *.mod
+	rm -r *~ *.o *.mod Data/

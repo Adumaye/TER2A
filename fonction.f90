@@ -65,7 +65,8 @@ end function
 
 subroutine write(x,U,i)
   real*8,intent(in)::x
-  real*8,dimension(3)::U
+  real*8,dimension(3),intent(in)::U
+  integer,intent(in)::i
   character*10 :: name
   write(name,'(a7,I3.3)') "Data/t_",i
   if (x==0) then
@@ -73,7 +74,7 @@ subroutine write(x,U,i)
   else
     open(1,file=name, form="formatted",position="append")
   end if
-  write(1,*)x,U(2)/U(1),get_P(U),get_T(U)
+  write(1,*) x, U(2)/U(1),get_P(U),get_T(U)
   close(1)
 end subroutine write
 
