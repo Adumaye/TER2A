@@ -74,7 +74,7 @@ subroutine write(x,U,i)
   else
     open(1,file=name, form="formatted",position="append")
   end if
-  write(1,*) x, U(2)/U(1),get_P(U),get_T(U)
+  write(1,*) x, U(1), U(2)/U(1),get_P(U),get_T(U)
   close(1)
 end subroutine write
 
