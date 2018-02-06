@@ -1,4 +1,5 @@
 *.mod
 *.o
+*.pdf
 exe
 Data/
