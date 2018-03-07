@@ -103,7 +103,7 @@ contains
     real*8,intent(in)::x,y
     real*8,dimension(4),intent(in)::U
     integer,intent(in)::i
-    character*10 :: name
+    character*14 :: name
     write(name,'(a7,I3.3,a4)') "Data/t_",i,'.vtk'
     if (x==0 .and. y==0) then
       open(1,file=name,form="formatted")
