@@ -104,7 +104,7 @@ contains
     real*8,dimension(4),intent(in)::U
     integer,intent(in)::i
     character*10 :: name
-    write(name,'(a7,I3.3)') "Data/t_",i
+    write(name,'(a7,I3.3,a4)') "Data/t_",i,'.vtk'
     if (x==0 .and. y==0) then
       open(1,file=name,form="formatted")
       write(1,*)  "# vtk DataFile Version 3.0 "
@@ -112,6 +112,8 @@ contains
       write(1,*)  "ASCII"
       write(1,*)  "DATASET UNSTRUCTURED_GRID"
       write(1,*)  "POINTS ", (int(1./get_dx())+1)*(int(1./get_dy())+1) ," float "
+      write(1,*)  'CELL_DATA ', get_dx()*get_dy()
+      write(1,*)  'LOOKUP_TABLE default'
     else
       open(1,file=name, form="formatted",position="append")
     end if
