@@ -107,9 +107,15 @@ contains
     write(name,'(a7,I3.3)') "Data/t_",i
     if (x==0 .and. y==0) then
       open(1,file=name,form="formatted")
+      write(1,*)  "# vtk DataFile Version 3.0 "
+      write(1,*)  "2D Unstructured Grid"
+      write(1,*)  "ASCII"
+      write(1,*)  "DATASET UNSTRUCTURED_GRID"
+      write(1,*)  "POINTS ", (int(1./get_dx())+1)*(int(1./get_dy())+1) ," float "
     else
       open(1,file=name, form="formatted",position="append")
     end if
+
     write(1,*) x,y, U(1), U(2)/U(1),get_P(U),get_T(U)
     close(1)
   end subroutine write
