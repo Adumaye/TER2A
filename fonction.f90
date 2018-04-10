@@ -3,15 +3,25 @@ module fonction  !!! Ce module calculera les flux au interfaces
 
 
 contains
-  function get_F(U)
+  function get_F_X(U)
     real*8,dimension(4),intent(in)::U
-    real*8,dimension(4)::get_F
-    get_F(1)=U(2)
-    get_F(2)= U(2)*U(2)/U(1) + get_P(U)
-    get_F(3)=U(2)*U(3)/U(1)
-    get_F(4)=(1./(Gamma-1.)*get_P(U)/U(1)+ get_V(U)**2/2. + get_P(U))*U(2)/U(1)
+    real*8,dimension(4)::get_F_X
+    get_F_X(1)=U(2)
+    get_F_X(2)= U(2)*U(2)/U(1) + get_P(U)
+    get_F_X(3)=U(2)*U(3)/U(1)
+    !get_F_X(4)=(1./(Gamma-1.)*get_P(U)/U(1)+ get_V(U)**2/2. + get_P(U))*U(2)/U(1)    !--> ici on recalcule e a chaque itération
+    get_F_X(4)=(U(4) + get_P(U))*U(2)/U(1)  !--> ici e(t)=E(t-1)
   end function
 
+  function get_F_Y(U)
+    real*8,dimension(4),intent(in)::U
+    real*8,dimension(4)::get_F_Y
+    get_F_Y(1)=U(3)
+    get_F_Y(2)=U(2)*U(3)/U(1)
+    get_F_Y(3)= U(3)*U(3)/U(1) + get_P(U)
+    !get_F_Y(4)=(1./(Gamma-1.)*get_P(U)/U(1)+ get_V(U)**2/2. + get_P(U))*U(2)/U(1)    !--> ici on recalcule e a chaque itération
+    get_F_Y(4)=(U(4) + get_P(U))*U(3)/U(1)  !--> ici e(t)=E(t-1)
+  end function
 
 
   function get_b_X(Ui,Ui_1)
@@ -69,13 +79,13 @@ contains
   function Flux_X(Ui,Ui_1)
     real*8,dimension(4),intent(in)::Ui,Ui_1
     real*8,dimension(4)::Flux_X
-    Flux_X=0.5d0*(get_F(Ui_1)+get_F(Ui))-get_b_X(Ui,Ui_1)*0.5d0*(Ui_1-Ui)
+    Flux_X=0.5d0*(get_F_X(Ui_1)+get_F_X(Ui))-get_b_X(Ui,Ui_1)*0.5d0*(Ui_1-Ui)
   end function
 
   function Flux_Y(Uj,Uj_1)
     real*8,dimension(4),intent(in)::Uj,Uj_1
     real*8,dimension(4)::Flux_Y
-    Flux_Y=0.5d0*(get_F(Uj_1)+get_F(Uj))-get_b_Y(Uj,Uj_1)*0.5d0*(Uj_1-Uj)
+    Flux_Y=0.5d0*(get_F_Y(Uj_1)+get_F_Y(Uj))-get_b_Y(Uj,Uj_1)*0.5d0*(Uj_1-Uj)
   end function
 
   function get_dt(U)
@@ -118,7 +128,7 @@ contains
       open(1,file=name, form="formatted",position="append")
     end if
 
-    write(1,*) x,y, U(1), U(2)/U(1),get_P(U),get_T(U)
+    write(1,*) x,y, U(1), U(3)/U(1),get_P(U),get_T(U)
     close(1)
   end subroutine write
 
