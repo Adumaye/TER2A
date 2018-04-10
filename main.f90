@@ -85,7 +85,12 @@ end do
         Unext(:,i+1,j+1)=Unext(:,i+1,j+1)+Flux_j
       end do
     end do
-
+    do i=0,Nx
+      Flux_i=Flux_X(U(:,i,Nx),U(:,i+1,Nx))
+      Unext(:,i,Ny)=Unext(:,i,Ny)-Flux_i
+      Unext(:,i+1,Ny)=Unext(:,i+1,Ny)+Flux_i
+    end do
+    
     dt=get_dt(U)
     U(:,1:Nx,1:Ny)=U(:,1:Nx,1:Ny)+dt/dx*Unext(:,1:Nx,1:Ny)
     do j=1,Ny
