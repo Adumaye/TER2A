@@ -32,40 +32,73 @@ program main
   mVd_X=rhod*(Vd_X)
   mVg_Y=rhog*Vg_Y
   mVd_Y=rhod*Vd_Y
-  ! Eg=1.d0/2.d0*(Vg_X**2 + Vg_Y**2) + pg*1.d0/(get_gamma()-1.d0)
-  ! Ed=1.d0/2.d0*(Vd_X**2 + Vd_Y**2) +pd*1.d0/(get_gamma()-1.d0)
   Eg=2.5d0
   Ed=0.25d0
 
-! CI en X
-  do i=0,Nx+1
-    if (i<Nx/2) then
-      U(1,i,:)=rhog
-      U(2,i,:)=mVg_X
-      U(3,i,:)=mVg_Y
-      U(4,i,:)=Eg
+  ! ! CI en X
+  ! do i=0,Nx+1
+  !   if (i<Nx/2) then
+  !     U(1,i,:)=rhog
+  !     U(2,i,:)=mVg_X
+  !     U(3,i,:)=mVg_Y
+  !     U(4,i,:)=Eg
+  !   else
+  !     U(1,i,:)=rhod
+  !     U(2,i,:)=mVd_X
+  !     U(3,i,:)=mVd_Y
+  !     U(4,i,:)=Ed
+  !   end if
+  ! end do
+
+  ! !! CI en Y
+  ! do j=0,Ny+1
+  !   if (j<Ny/2) then
+  !     U(1,:,j)=rhog
+  !     U(2,:,j)=mVg_X
+  !     U(3,:,j)=mVg_Y
+  !     U(4,:,j)=Eg
+  !   else
+  !     U(1,:,j)=rhod
+  !     U(2,:,j)=mVd_X
+  !     U(3,:,j)=mVd_Y
+  !     U(4,:,j)=Ed
+  !   end if
+  ! end do
+
+  !! CI en 2D
+  do j=0,Ny+1
+    if (j<Ny/2) then
+      do i=0,Nx+1
+        if (i<Nx/2) then
+          U(1,i,j)=0.5323d0
+          U(2,i,j)=0.5323d0*1.2d0
+          U(3,i,j)=0.5323d0*0.d0
+          U(4,i,j)=0.6d0
+        else
+          U(1,i,j)=1.5d0
+          U(2,i,j)=0.d0
+          U(3,i,j)=0.d0
+          U(4,i,j)=3.d0
+        end if
+      end do
     else
-      U(1,i,:)=rhod
-      U(2,i,:)=mVd_X
-      U(3,i,:)=mVd_Y
-      U(4,i,:)=Ed
+      do i=0,Nx+1
+        if (i<Nx/2) then
+          U(1,i,j)=1.13d0
+          U(2,i,j)=1.13d0*1.2d0
+          U(3,i,j)=1.13d0*1.2d0
+          U(4,i,j)=0.058d0
+        else
+          U(1,i,j)=0.53d0
+          U(2,i,j)=0.d0
+          U(3,i,j)=0.53d0*1.2d0
+          U(4,i,j)=0.6d0
+        end if
+      end do
     end if
   end do
 
-! !! CI en Y
-! do j=0,Ny+1
-!   if (j<Ny/2) then
-!     U(1,:,j)=rhog
-!     U(2,:,j)=mVg_X
-!     U(3,:,j)=mVg_Y
-!     U(4,:,j)=Eg
-!   else
-!     U(1,:,j)=rhod
-!     U(2,:,j)=mVd_X
-!     U(3,:,j)=mVd_Y
-!     U(4,:,j)=Ed
-!   end if
-! end do
+
 
   !!! BOUCLE EN TEMPS
   t=0.d0
@@ -78,6 +111,7 @@ program main
           call write(i*h_x,j*h_y,U(:,i,j),Nt)
         end do
       end do
+      dt=get_dt(U)
       t=t+dt
       Nt=Nt+1
     end if
@@ -88,23 +122,27 @@ program main
       do i=0,Nx
         Flux_i=Flux_X(U(:,i,j),U(:,i+1,j))
         Flux_j=Flux_Y(U(:,i+1,j),U(:,i+1,j+1))
-        Unext(:,i,j)=Unext(:,i,j)-Flux_i
-        Unext(:,i+1,j)=Unext(:,i+1,j)+Flux_i
-        Unext(:,i+1,j)=Unext(:,i+1,j)-Flux_j
-        Unext(:,i+1,j+1)=Unext(:,i+1,j+1)+Flux_j
+        Unext(:,i,j)=Unext(:,i,j)-Flux_i/h_X
+        Unext(:,i+1,j)=Unext(:,i+1,j)+Flux_i/h_X
+        Unext(:,i+1,j)=Unext(:,i+1,j)-Flux_j/h_Y
+        Unext(:,i+1,j+1)=Unext(:,i+1,j+1)+Flux_j/h_Y
       end do
     end do
 
-    ! /!\ bord !!!!
-
-
     dt=get_dt(U)
-    U(:,1:Nx,1:Ny)=U(:,1:Nx,1:Ny)-dt/dx*Unext(:,1:Nx,1:Ny)
+    U(:,1:Nx,1:Ny)=U(:,1:Nx,1:Ny)+dt*Unext(:,1:Nx,1:Ny)
+
+    U(:,1:Nx,0)=U(:,1:Nx,1)
+    U(:,1:Nx,Ny+1)=U(:,1:Nx,Ny)
+    U(:,0,:)=U(:,1,:)
+    U(:,Nx+1,:)=U(:,Nx,:)
+
     do i=0,Nx+1
       do j=0,Ny+1
         call write(i*h_x,j*h_y,U(:,i,j),Nt)
       end do
     end do
+
     t=t+dt
     Nt=Nt+1
     print*,t

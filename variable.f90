@@ -9,11 +9,11 @@ module variable  !!! Ce module sert a récupérer toute les données néccéssai
 
 
 contains
-! function get_V(U)
-!   real*8,dimension(4),intent(in)::U
-!   real*8:: get_V
-!   get_V= sqrt( (U(2)/U(1))**2 + (U(3)/U(1))**2 )
-! end function
+function get_V(U)
+  real*8,dimension(4),intent(in)::U
+  real*8:: get_V
+  get_V= sqrt( (U(2)/U(1))**2 + (U(3)/U(1))**2 )
+end function
 
 ! function get_T(U)
 !   real*8,dimension(4),intent(in)::U
